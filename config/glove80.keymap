@@ -71,6 +71,45 @@
         bindings = <&FIRST>, <&SECOND>; \
     };
 
+
+#define AZURE      RGB_COLOR_HSB(210, 100, 100)
+#define BLACK      RGB_COLOR_HSB(0,   0,   0)
+#define BLOSSOM    RGB_COLOR_HSB(330, 50,  100)
+#define BLUE       RGB_COLOR_HSB(240, 100, 100)
+#define BROWN      RGB_COLOR_HSB(30,  100, 50)
+#define BURGUNDY   RGB_COLOR_HSB(0,   100, 40)
+#define BUTTER     RGB_COLOR_HSB(60,  50,  100)
+#define CHARCOAL   RGB_COLOR_HSB(0,   0,   25)
+#define COCOA      RGB_COLOR_HSB(20,  100, 40)
+#define CYAN       RGB_COLOR_HSB(180, 100, 100)
+#define FOREST     RGB_COLOR_HSB(120, 100, 40)
+#define GRAY       RGB_COLOR_HSB(0,   0,   50)
+#define GREELOW    RGB_COLOR_HSB(90,  100, 100)
+#define GREEN      RGB_COLOR_HSB(120, 100, 100)
+#define IVORY      RGB_COLOR_HSB(60,  10,  100)
+#define LIME       RGB_COLOR_HSB(75,  100, 100)
+#define MAGENTA    RGB_COLOR_HSB(300, 100, 100)
+#define MINT       RGB_COLOR_HSB(150, 50,  100)
+#define NAVY       RGB_COLOR_HSB(240, 100, 40)
+#define OLIVE      RGB_COLOR_HSB(60,  100, 40)
+#define ORANGE     RGB_COLOR_HSB(30,  100, 100)
+#define PEACH      RGB_COLOR_HSB(20,  60,  100)
+#define PERIWINKLE RGB_COLOR_HSB(240, 50,  100)
+#define PINK       RGB_COLOR_HSB(0,   50,  100)
+#define PLUM       RGB_COLOR_HSB(300, 100, 40)
+#define PURPLE     RGB_COLOR_HSB(270, 100, 50)
+#define RED        RGB_COLOR_HSB(0,   100, 100)
+#define ROSE       RGB_COLOR_HSB(330, 100, 100)
+#define SEAFOAM    RGB_COLOR_HSB(160, 50,  100)
+#define SILVER     RGB_COLOR_HSB(0,   0,   75)
+#define SKY        RGB_COLOR_HSB(210, 50,  100)
+#define SPRING     RGB_COLOR_HSB(150, 100, 100)
+#define STEEL      RGB_COLOR_HSB(210, 10,  70)
+#define TEAL       RGB_COLOR_HSB(180, 100, 50)
+#define VIOLET     RGB_COLOR_HSB(270, 100, 100)
+#define WHITE      RGB_COLOR_HSB(0,   0,   100)
+#define YELLOW     RGB_COLOR_HSB(60,  100, 100)
+
 &sk {
     quick-release;
     release-after-ms = <500>;
@@ -89,15 +128,14 @@
     behaviors {
         #include "macros.dtsi"
 
-        MAGIC(lpm, mo, rgb_ug_status_macro, 185)
-        MAGIC(kpm, kp, rgb_ug_status_macro, 185)
+        MAGIC(mag, mo, rgb_ug_status_macro, 185)
 
-        SUPER(lkp, mo, kp,        140, 185, 0, KEYS_NONE, "hold-preferred")
-        SUPER(kpp, kp, kp,        140, 0,   0, KEYS_NONE, "hold-preferred")
-        SUPER(lcw, mo, caps_word, 140, 0,   0, KEYS_NONE, "hold-preferred")
+        SUPER(lkp, mo, kp,        130, 165, 0, KEYS_NONE, "hold-preferred")
+        SUPER(kpp, kp, kp,        130, 0,   0, KEYS_NONE, "hold-preferred")
+        SUPER(lcw, kp, caps_word, 130, 0,   0, KEYS_NONE, "hold-preferred")
 
-        SUPER(kpr, kp, kp, 140, 185, 0, KEYS_LEFT  THUMBS_LEFT,  "tap-preferred")
-        SUPER(kpl, kp, kp, 140, 0,   0, KEYS_RIGHT THUMBS_RIGHT, "tap-preferred")
+        SUPER(kpr, kp, kp, 130, 165, 0, KEYS_LEFT  THUMBS_LEFT,  "tap-preferred")
+        SUPER(kpl, kp, kp, 130, 0,   0, KEYS_RIGHT THUMBS_RIGHT, "tap-preferred")
 
         MORPH(one,   EXCL,   N1, MOD_LSFT|MOD_RSFT)
         MORPH(two,   AT,     N2, MOD_LSFT|MOD_RSFT)
@@ -117,12 +155,12 @@
         default_layer {
             display-name = "Base";
             bindings = <
-                &none          &none   &none   &none     &none                                                                                                          &none     &none      &none    &none      &none
-                &none          &kp N1  &kp N2  &kp N3    &kp N4    &kp N5                                                                                       &kp N6  &kp N7    &kp N8     &kp N9   &kp N0     &none
-                &kpp LALT CAPS &kp Q   &kp W   &kp E     &kp R     &kp T                                                                                        &kp Y   &kp U     &kp I      &kp O    &kp P      &kpp RALT DEL
-                &kpp LSHFT ESC &kp A   &kp S   &kp D     &kp F     &kp G                                                                                        &kp H   &kp J     &kp K      &kp L    &kp SEMI   &kpp RSHFT ENTER
-                &kpp LCTRL TAB &kp Z   &kp X   &kp C     &kp V     &kp B   &lcw LGUI 0      &mo 1          &mo 3     &lpm 2 0 &mo 1            &kpp RGUI DEL    &kp N   &kp M     &kp COMMA  &kp DOT  &kp FSLH   &kpp RCTRL SQT
-                &lkp 3 LGUI    &kp TAB &kp SQT &kp BSLH  &kp EQUAL         &kpl LSHFT SPACE &kpp LCTRL ESC &kp LALT  &kp RALT &kpp RCTRL ENTER &kpr RSHFT BSPC          &kp MINUS &kp LBKT   &kp RBKT &kp GRAVE  &kpm RGUI 0
+                &macro_backtick &macro_angles &macro_brackets &macro_quotes &none                                                                          &none &macro_dquotes &macro_parens &macro_braces &macro_block
+                &mo 3           &kp N1  &kp N2  &kp N3    &kp N4    &kp N5                                                                                       &kp N6  &kp N7    &kp N8     &kp N9   &kp N0    &mag 2 0
+                &kpp LALT TAB   &kp Q   &kp W   &kp E     &kp R     &kp T                                                                                        &kp Y   &kp U     &kp I      &kp O    &kp P     &kpp RALT DEL
+                &kpp LSHFT ESC  &kp A   &kp S   &kp D     &kp F     &kp G                                                                                        &kp H   &kp J     &kp K      &kp L    &kp SEMI  &kpp RSHFT ENTER
+                &kpp LCTRL CAPS &kp Z   &kp X   &kp C     &kp V     &kp B   &lcw LGUI 0      &mo 1          &mo 3     &mag 2 0 &mo 1            &kpp RGUI DEL    &kp N   &kp M     &kp COMMA  &kp DOT  &kp FSLH  &kpp RCTRL SQT
+                &kpp LGUI SLCK  &kp TAB &kp SQT &kp BSLH  &kp EQUAL         &kpl LSHFT SPACE &kpp LCTRL ESC &kp LALT  &kp RALT &kpp RCTRL ENTER &kpr RSHFT BSPC          &kp MINUS &kp LBKT   &kp RBKT &kp GRAVE &kpp RGUI PSCRN
             >;
         };
         fun {
@@ -139,12 +177,12 @@
         mod {
             display-name = "Mod";
             bindings = <
-                &none       &none            &none           &none           &none                                                                              &none           &none           &none         &none         &none
-                &bt BT_CLR  &bt_0            &bt_1           &bt_2           &bt_3           &bt_4                                                &bt BT_DISC 0 &bt BT_DISC 1   &bt BT_DISC 2   &bt BT_DISC 3 &bt BT_DISC 4 &bt BT_CLR
-                &bootloader &rgb_ug RGB_SPI  &rgb_ug RGB_SAI &rgb_ug RGB_HUI &rgb_ug RGB_BRI &rgb_ug RGB_TOG                                      &none         &none           &none           &none         &none         &bootloader
-                &sys_reset  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD &rgb_ug RGB_HUD &rgb_ug RGB_BRD &rgb_ug RGB_EFF                                      &none         &none           &none           &none         &none         &sys_reset
-                &soft_off   &none            &none           &none           &none           &none           &none &none &none &none &none &none  &none         &none           &none           &none         &none         &soft_off
-                &none       &none            &none           &rgb_ug RGB_EFF &rgb_ug RGB_TOG                 &none &none &none &none &none &none                &rgb_ug RGB_BRD &rgb_ug RGB_BRI &none         &none         &none
+                &none       &none            &none           &none           &none                                                                                &none          &none         &none         &none            &none
+                &bt BT_CLR  &bt_0            &bt_1           &bt_2           &bt_3           &bt_4                                                &bt BT_DISC 0   &bt BT_DISC 1  &bt BT_DISC 2 &bt BT_DISC 3 &bt BT_DISC 4    &bt BT_CLR
+                &bootloader &rgb_ug RGB_SPI  &rgb_ug RGB_SAI &rgb_ug RGB_HUI &rgb_ug RGB_BRI &rgb_ug RGB_TOG                                      &rgb_ug MAGENTA &rgb_ug TEAL   &rgb_ug LIME  &rgb_ug MINT  &rgb_ug ROSE     &bootloader
+                &sys_reset  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD &rgb_ug RGB_HUD &rgb_ug RGB_BRD &rgb_ug RGB_EFF                                      &rgb_ug VIOLET  &rgb_ug AZURE  &rgb_ug AZURE &rgb_ug NAVY  &rgb_ug BURGUNDY &sys_reset
+                &soft_off   &none            &none           &none           &none           &none           &none &none &none &none &none &none  &rgb_ug BLOSSOM &rgb_ug SPRING &rgb_ug IVORY &rgb_ug PEACH &rgb_ug PLUM     &soft_off
+                &none       &none            &none           &rgb_ug RGB_EFF &rgb_ug RGB_TOG                 &none &none &none &none &none &none                &rgb_ug RGB_BRD &rgb_ug RGB_BRI &none        &none            &none
             >;
         };
         num {
