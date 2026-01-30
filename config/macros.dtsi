@@ -54,12 +54,136 @@ macro_block: macro_block {
     bindings = <&kp GRAVE>, <&kp GRAVE>, <&kp GRAVE>, <&kp ENTER>, <&kp GRAVE>, <&kp GRAVE>, <&kp GRAVE>, <&kp UP>, <&kp END>;
     wait-ms = <10>;
 };
+macro_fatarrow: macro_fatarrow {
+    compatible = "zmk,behavior-macro";
+    label = "macro_fatarrow";
+    #binding-cells = <0>;
+    bindings = <&kp EQUAL>, <&kp GT>, <&kp SPACE>, <&kp LBRC>, <&kp RBRC>, <&kp LEFT>;
+    wait-ms = <10>;
+};
+macro_arrow: macro_arrow {
+    compatible = "zmk,behavior-macro";
+    label = "macro_arrow";
+    #binding-cells = <0>;
+    bindings = <&kp MINUS>, <&kp GT>, <&kp SPACE>, <&kp LBRC>, <&kp RBRC>, <&kp LEFT>;
+    wait-ms = <10>;
+};
 macro_kinesis: macro_kinesis {
     compatible = "zmk,behavior-macro";
     label = "macro_kinesis";
     #binding-cells = <0>;
     bindings = <&kp LS(K)>, <&kp I>, <&kp N>, <&kp E>, <&kp S>, <&kp I>, <&kp S>;
     wait-ms = <10>;
+};
+macro_select_line: macro_select_line {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp HOME
+        &kp LS(END)
+    >;
+};
+macro_kill_to_start: macro_kill_to_start {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp LS(HOME)
+        &kp DEL
+    >;
+};
+macro_kill_line: macro_kill_line {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp HOME
+        &kp LS(END)
+        &kp DEL
+    >;
+};
+macro_kill_to_end: macro_kill_to_end {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp LS(END)
+        &kp DEL
+    >;
+};
+macro_open_dln: macro_open_dln {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp END
+        &kp ENTER
+    >;
+};
+macro_open_uln: macro_open_uln {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp HOME
+        &kp ENTER
+        &kp UP
+    >;
+};
+macro_join_nln: macro_join_nln {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp END
+        &kp DEL
+        &kp SPACE
+        &kp END
+    >;
+};
+macro_join_pln: macro_join_pln {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp UP
+        &kp END
+        &kp DEL
+        &kp SPACE
+    >;
+};
+Win_Word_Left: Windows_Left {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LC(LEFT)>;
+    display-name = "Windows Word Left";
+};
+Win_Word_Right: Windows_Right {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LC(RIGHT)>;
+    display-name = "Windows Word Right";
+};
+Win_Word_Up: Windows_Up {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LC(UP)>;
+    display-name = "Windows Word Up";
+};
+Win_Word_Down: Windows_Down {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LC(DOWN)>;
+    display-name = "Windows Word Down";
+};
+Win_Select_Word: Win_Select_Word {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp LC(LEFT)
+        &kp LS(LC(RIGHT))
+    >;
+};
+Win_Select_Pgph: Win_Select_Pgph {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp LC(UP)
+        &kp LS(LC(DOWN))
+    >;
 };
 Win_Cut: Windows_Cut {
     compatible = "zmk,behavior-macro";
@@ -109,53 +233,11 @@ Win_Snip_Tool: Win_Snip {
     bindings = <&kp LS(LG(S))>;
     display-name = "Windows Screen Snip";
 };
-Win_Show_All_Windows: Win_ShowAW {
+Win_Show_All_Windows: Win_Show_All {
     compatible = "zmk,behavior-macro";
     #binding-cells = <0>;
     bindings = <&kp LG(TAB)>;
     display-name = "Windows Show All Windows";
-};
-Mac_Cut: Mac_Cut {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LG(X)>;
-    display-name = "Mac Cut";
-};
-Mac_Copy: Mac_Copy {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LG(C)>;
-    display-name = "Mac Copy";
-};
-Mac_Paste: Mac_Paste {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LG(V)>;
-    display-name = "Mac Paste";
-};
-Mac_Undo: Mac_Undo {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LG(Z)>;
-    display-name = "Mac Undo";
-};
-Mac_Select_All: Mac_SelAll {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LG(A)>;
-    display-name = "Mac Select All";
-};
-Mac_Mission_Control: Mac_ShowAW {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LC(UP_ARROW)>;
-    display-name = "Mac Show All Windows";
-};
-Mac_Snip_Tool: Mac_Snip {
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings = <&kp LC(LG(LS(NUMBER_4)))>;
-    display-name = "Mac Screen Snip";
 };
 Win_Close_Program: Win_Close_Program {
     compatible = "zmk,behavior-macro";
@@ -199,6 +281,88 @@ Win_Tile_Right: Win_Tile_Right {
     bindings = <&kp LG(RIGHT)>;
     display-name = "Windows Tile Right";
 };
+Mac_Cut: Mac_Cut {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LG(X)>;
+    display-name = "Mac Cut";
+};
+Mac_Copy: Mac_Copy {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LG(C)>;
+    display-name = "Mac Copy";
+};
+Mac_Paste: Mac_Paste {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LG(V)>;
+    display-name = "Mac Paste";
+};
+Mac_Undo: Mac_Undo {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LG(Z)>;
+    display-name = "Mac Undo";
+};
+Mac_Select_All: Mac_SelAll {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LG(A)>;
+    display-name = "Mac Select All";
+};
+Mac_Word_Left: Mac_Left {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LA(LEFT)>;
+    display-name = "Mac Word Left";
+};
+Mac_Word_Right: Mac_Right {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LA(RIGHT)>;
+    display-name = "Mac Word Right";
+};
+Mac_Word_Up: Mac_Up {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LA(UP)>;
+    display-name = "Mac Word Up";
+};
+Mac_Word_Down: Mac_Down {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LA(DOWN)>;
+    display-name = "Mac Word Down";
+};
+Mac_Select_Word: Mac_Select_Word {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp LA(LEFT)
+        &kp LS(LA(RIGHT))
+    >;
+};
+Mac_Select_Pgph: Mac_Select_Pgph {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <
+        &kp LA(UP)
+        &kp LS(LA(DOWN))
+    >;
+};
+Mac_Mission_Control: Mac_Show_All {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LC(UP_ARROW)>;
+    display-name = "Mac Show All Windows";
+};
+Mac_Snip_Tool: Mac_Snip {
+    compatible = "zmk,behavior-macro";
+    #binding-cells = <0>;
+    bindings = <&kp LC(LG(LS(NUMBER_4)))>;
+    display-name = "Mac Screen Snip";
+};
 Mac_Spotlight_Search: Mac_Spotlight_Search {
     compatible = "zmk,behavior-macro";
     #binding-cells = <0>;
@@ -222,51 +386,4 @@ Double_Click: Double_Click {
     #binding-cells = <0>;
     bindings = <&mkp MB1 &mkp MB1>;
     display-name = "Double Click";
-};
-rgb_ug_status_macro: rgb_ug_status_macro_0 {
-    label = "RGB_UG_STATUS";
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings
-    = <&rgb_ug RGB_STATUS>;
-};
-bt_0: bt_profile_macro_0 {
-    label = "BT_0";
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings
-        = <&out OUT_BLE>,
-            <&bt BT_SEL 0>;
-};
-bt_1: bt_profile_macro_1 {
-    label = "BT_1";
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings
-        = <&out OUT_BLE>,
-            <&bt BT_SEL 1>;
-};
-bt_2: bt_profile_macro_2 {
-    label = "BT_2";
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings
-        = <&out OUT_BLE>,
-            <&bt BT_SEL 2>;
-};
-bt_3: bt_profile_macro_3 {
-    label = "BT_3";
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings
-        = <&out OUT_BLE>,
-            <&bt BT_SEL 3>;
-};
-bt_4: bt_profile_macro_4 {
-    label = "BT_4";
-    compatible = "zmk,behavior-macro";
-    #binding-cells = <0>;
-    bindings
-        = <&out OUT_BLE>,
-            <&bt BT_SEL 4>;
 };

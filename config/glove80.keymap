@@ -49,7 +49,7 @@
         mods = <(MRPH)>; \
     };
 
-#define SUPER(ID, FIRST, SECOND, TERM, QTAP, RPI, KEYS, FLAVE) \
+#define SUPER(ID, FIRST, SECOND, TERM, QTAP, RPI, KEYS, FLAVE, ...) \
     ID: mod_tap_##ID { \
         compatible = "zmk,behavior-hold-tap"; \
         quick_tap_ms = <QTAP>; \
@@ -59,18 +59,36 @@
         bindings = <&FIRST>, <&SECOND>; \
         require-prior-idle-ms = <RPI>; \
         hold-trigger-key-positions = <KEYS>; \
+        hold-while-undecided-linger; \
+        __VA_ARGS__ \
     };
 
-#define MAGIC(ID, FIRST, SECOND, TERM) \
-    ID: mag_tap_##ID { \
-        compatible = "zmk,behavior-hold-tap"; \
-        label = "MAGIC_HOLD_TAP"; \
-        flavor = "tap-preferred"; \
-        tapping-term-ms = <TERM>; \
-        #binding-cells = <2>; \
-        bindings = <&FIRST>, <&SECOND>; \
+#define PROFILE(ID, INDEX, LAYER_ON, LAYER_OFF) \
+    ID: bt_profile_##ID { \
+        compatible = "zmk,behavior-macro"; \
+        #binding-cells = <0>; \
+        wait-ms = <0>; \
+        tap-ms  = <0>; \
+        bindings = <&bt BT_SEL INDEX>, <&tog_off LAYER_OFF>, <&tog_on LAYER_ON> ; \
     };
 
+
+#define L_OS_WIN  1
+#define L_OS_MAC  2
+
+&sk {
+    quick-release;
+    release-after-ms = <500>;
+    /delete-property/ ignore-modifiers;
+};
+
+&soft_off {
+    hold-time-ms = <2000>;
+};
+
+&caps_word {
+    continue-list = <UNDERSCORE SEMI PIPE AMPS MINUS BACKSPACE DELETE LSHFT RSHFT>;
+};
 
 #define AZURE      RGB_COLOR_HSB(210, 100, 100)
 #define BLACK      RGB_COLOR_HSB(0,   0,   0)
@@ -94,7 +112,7 @@
 #define OLIVE      RGB_COLOR_HSB(60,  100, 40)
 #define ORANGE     RGB_COLOR_HSB(30,  100, 100)
 #define PEACH      RGB_COLOR_HSB(20,  60,  100)
-#define PERIWINKLE RGB_COLOR_HSB(240, 50,  100)
+#define WINKLE     RGB_COLOR_HSB(240, 50,  100)
 #define PINK       RGB_COLOR_HSB(0,   50,  100)
 #define PLUM       RGB_COLOR_HSB(300, 100, 40)
 #define PURPLE     RGB_COLOR_HSB(270, 100, 50)
@@ -110,32 +128,40 @@
 #define WHITE      RGB_COLOR_HSB(0,   0,   100)
 #define YELLOW     RGB_COLOR_HSB(60,  100, 100)
 
-&sk {
-    quick-release;
-    release-after-ms = <500>;
-    /delete-property/ ignore-modifiers;
-};
-
-&soft_off {
-    hold-time-ms = <2000>;
-};
-
-&caps_word {
-    continue-list = <UNDERSCORE SEMI PIPE AMPS MINUS BACKSPACE DELETE LSHFT RSHFT>;
-};
+#define MAGIC(ID, FIRST, SECOND, TERM) \
+    ID: mag_tap_##ID { \
+        compatible = "zmk,behavior-hold-tap"; \
+        label = "MAGIC_HOLD_TAP"; \
+        flavor = "tap-preferred"; \
+        tapping-term-ms = <TERM>; \
+        #binding-cells = <2>; \
+        bindings = <&FIRST>, <&SECOND>; \
+    };
 
 / {
     behaviors {
-        #include "macros.dtsi"
+        tog_on: toggle_layer_on_only {
+            compatible = "zmk,behavior-toggle-layer";
+            display-name = "Toggle Layer On";
+            #binding-cells = <1>;
+            toggle-mode = "on";
+        };
 
-        MAGIC(mag, mo, rgb_ug_status_macro, 185)
+        tog_off: toggle_layer_off_only {
+            compatible = "zmk,behavior-toggle-layer";
+            display-name = "Toggle Layer Off";
+            #binding-cells = <1>;
+            toggle-mode = "off";
+        };
 
-        SUPER(lkp, mo, kp,        130, 165, 0, KEYS_NONE, "hold-preferred")
-        SUPER(kpp, kp, kp,        130, 0,   0, KEYS_NONE, "hold-preferred")
-        SUPER(lcw, kp, caps_word, 130, 0,   0, KEYS_NONE, "hold-preferred")
+        SUPER(lcwm, mo, caps_word, 135, 0,   0, KEYS_NONE, "hold-preferred")
+        SUPER(lcwp, kp, caps_word, 135, 0,   0, KEYS_NONE, "hold-preferred")
 
-        SUPER(kpr, kp, kp, 130, 165, 0, KEYS_LEFT  THUMBS_LEFT,  "tap-preferred")
-        SUPER(kpl, kp, kp, 130, 0,   0, KEYS_RIGHT THUMBS_RIGHT, "tap-preferred")
+        SUPER(kpp, kp, kp, 135, 165, 25, KEYS_NONE,  "hold-preferred")
+        SUPER(lkp, mo, kp, 135, 165, 25, KEYS_NONE,  "tap-preferred")
+
+        SUPER(kpr, kp, kp, 130, 165, 25, KEYS_LEFT,  "balanced")
+        SUPER(kpl, kp, kp, 130, 165, 25, KEYS_RIGHT, "balanced")
 
         MORPH(one,   EXCL,   N1, MOD_LSFT|MOD_RSFT)
         MORPH(two,   AT,     N2, MOD_LSFT|MOD_RSFT)
@@ -147,53 +173,140 @@
         MORPH(eight, ASTRK,  N8, MOD_LSFT|MOD_RSFT)
         MORPH(nine,  LPAR,   N9, MOD_LSFT|MOD_RSFT)
         MORPH(zero,  RPAR,   N0, MOD_LSFT|MOD_RSFT)
+
+        PROFILE(pfl0, 0, L_OS_MAC, L_OS_WIN)
+        PROFILE(pfl1, 1, L_OS_MAC, L_OS_WIN)
+        PROFILE(pfl2, 2, L_OS_WIN, L_OS_MAC)
+        PROFILE(pfl3, 3, L_OS_WIN, L_OS_MAC)
+        PROFILE(pfl4, 4, L_OS_WIN, L_OS_MAC)
+
+        combos {
+            compatible = "zmk,combos";
+            combo_num_left {
+                timeout-ms = <75>;
+                bindings = <&mo 3>;
+                key-positions = <53 70>;
+            };
+            combo_fun_left {
+                timeout-ms = <75>;
+                bindings = <&mo 2>;
+                key-positions = <52 69>;
+            };
+            combo_mag_left {
+                timeout-ms = <75>;
+                bindings = <&mo 1>;
+                key-positions = <54 71>;
+            };
+            combo_num_right {
+                timeout-ms = <75>;
+                bindings = <&mo 3>;
+                key-positions = <56 73>;
+            };
+            combo_fun_right {
+                timeout-ms = <75>;
+                bindings = <&mo 2>;
+                key-positions = <57 74>;
+            };
+            combo_mag_right {
+                timeout-ms = <75>;
+                bindings = <&mo 1>;
+                key-positions = <55 72>;
+            };
+        };
+
+        #include "macros.dtsi"
+        #include "macros_additional.dtsi"
+        MAGIC(mag, mo, rgb_ug_status_macro, 185)
     };
 
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "Base";
+            display-name = "Default-Base";
             bindings = <
-                &macro_backtick &macro_angles &macro_brackets &macro_quotes &none                                                                          &none &macro_dquotes &macro_parens &macro_braces &macro_block
-                &mo 3           &kp N1  &kp N2  &kp N3    &kp N4    &kp N5                                                                                       &kp N6  &kp N7    &kp N8     &kp N9   &kp N0    &mag 2 0
-                &kpp LALT TAB   &kp Q   &kp W   &kp E     &kp R     &kp T                                                                                        &kp Y   &kp U     &kp I      &kp O    &kp P     &kpp RALT DEL
-                &kpp LSHFT ESC  &kp A   &kp S   &kp D     &kp F     &kp G                                                                                        &kp H   &kp J     &kp K      &kp L    &kp SEMI  &kpp RSHFT ENTER
-                &kpp LCTRL CAPS &kp Z   &kp X   &kp C     &kp V     &kp B   &lcw LGUI 0      &mo 1          &mo 3     &mag 2 0 &mo 1            &kpp RGUI DEL    &kp N   &kp M     &kp COMMA  &kp DOT  &kp FSLH  &kpp RCTRL SQT
-                &kpp LGUI SLCK  &kp TAB &kp SQT &kp BSLH  &kp EQUAL         &kpl LSHFT SPACE &kpp LCTRL ESC &kp LALT  &kp RALT &kpp RCTRL ENTER &kpr RSHFT BSPC          &kp MINUS &kp LBKT   &kp RBKT &kp GRAVE &kpp RGUI PSCRN
+                &trans        &trans  &trans  &trans &trans                                                                                                               &trans    &trans     &trans      &trans    &trans
+                &lkp  4 PSCRN &kp N1  &kp N2  &kp N3 &kp N4     &kp N5                                                                                            &kp N6  &kp N7    &kp N8     &kp N9      &kp N0    &lkp 4 BSPC
+                &lcwm 5 0     &kp Q   &kp W   &kp E  &kp R      &kp T                                                                                             &kp Y   &kp U     &kp I      &kp O       &kp P     &lkp 5 DEL
+                &lkp  6 TAB   &kp A   &kp S   &kp D  &kp F      &kp G                                                                                             &kp H   &kp J     &kp K      &kp L       &kp SEMI  &lkp 6 SQT
+                &lkp  3 ESC   &kp Z   &kp X   &kp C  &kp V      &kp B   &kpp LGUI DEL   &lkp 6 END     &mag 4 0    &mag 4 0     &lkp 6 PG_UP     &lcwp RALT 0     &kp N   &kp M     &kp COMMA  &kp DOT     &kp FSLH  &lkp 3 ENTER
+                &mo   8       &kp TAB &kp GRAVE &kp BSLH  &kp EQUAL     &kpl LSHFT BSPC &kpp LCTRL ESC &lkp 3 HOME &lkp 3 PG_DN &kpp RCTRL ENTER &kpr RSHFT SPACE         &kp MINUS &kp LBKT   &kp RBKT    &kp SQT   &mo 8
             >;
         };
-        fun {
-            display-name = "Fun";
+        default_win {
+            display-name = "Default-Win";
             bindings = <
-                &none           &none     &none          &none        &none                                                                                              &none        &none        &none         &none     &none
-                &kp F10         &kp F1    &kp F2         &kp F3       &kp F4          &kp F5                                                                &kp F6       &kp F7       &kp F8       &kp F9        &kp F10   &kp F12
-                &macro_backtick &kp LALT  &kp LA(LEFT)   &kp LA(DOWN) &kp LA(UP)      &kp LA(RIGHT)                                                         &kp LC(LEFT) &kp RC(DOWN) &kp RC(UP)   &kp RC(RIGHT) &kp RALT  &macro_block
-                &macro_quotes   &kp LSHFT &mmv MOVE_LEFT &mmv MOVE_UP &mmv MOVE_DOWN  &mmv MOVE_RIGHT                                                       &kp LEFT     &kp DOWN     &kp UP       &kp RIGHT     &kp RSHFT &macro_dquotes
-                &macro_parens   &kp LCTRL &kp LG(LEFT)   &kp LG(DOWN) &kp LG(UP)      &kp LG(RIGHT)   &mkp MB1 &mkp MB2 &mkp MB3 &mkp MB3 &mkp MB2 &mkp MB1 &kp HOME     &kp PG_DN    &kp PG_UP    &kp END       &kp RCTRL &macro_braces
-                &macro_angles   &kp LGUI  &kp  C_PP      &kp C_PREV   &kp C_NEXT                      &trans   &trans   &trans   &trans   &trans   &trans                &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE    &kp RGUI  &macro_brackets
+                &trans       &trans  &trans  &trans  &trans                                                                               &trans  &trans  &trans   &trans    &trans
+                &trans       &trans  &trans  &trans  &trans   &trans                                                              &trans  &trans  &trans  &trans   &trans    &trans
+                &trans       &trans  &trans  &trans  &trans   &trans                                                              &trans  &trans  &trans  &trans   &trans    &trans
+                &lkp 6 TAB   &trans  &trans  &trans  &trans   &trans                                                              &trans  &trans  &trans  &trans   &trans    &lkp 6 SQT
+                &trans       &trans  &trans  &trans  &trans   &trans   &trans &lkp 6 END    &trans &trans &lkp 6 PG_UP &trans     &trans  &trans  &trans  &trans   &trans    &trans
+                &trans       &trans  &trans  &trans  &trans            &trans &trans        &trans &trans &trans       &trans             &trans  &trans  &trans   &trans    &trans
             >;
         };
-        mod {
-            display-name = "Mod";
+        default_mac {
+            display-name = "Default-Mac";
             bindings = <
-                &none       &none            &none           &none           &none                                                                                &none          &none         &none         &none            &none
-                &bt BT_CLR  &bt_0            &bt_1           &bt_2           &bt_3           &bt_4                                                &bt BT_DISC 0   &bt BT_DISC 1  &bt BT_DISC 2 &bt BT_DISC 3 &bt BT_DISC 4    &bt BT_CLR
-                &bootloader &rgb_ug RGB_SPI  &rgb_ug RGB_SAI &rgb_ug RGB_HUI &rgb_ug RGB_BRI &rgb_ug RGB_TOG                                      &rgb_ug MAGENTA &rgb_ug TEAL   &rgb_ug LIME  &rgb_ug MINT  &rgb_ug ROSE     &bootloader
-                &sys_reset  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD &rgb_ug RGB_HUD &rgb_ug RGB_BRD &rgb_ug RGB_EFF                                      &rgb_ug VIOLET  &rgb_ug AZURE  &rgb_ug AZURE &rgb_ug NAVY  &rgb_ug BURGUNDY &sys_reset
-                &soft_off   &none            &none           &none           &none           &none           &none &none &none &none &none &none  &rgb_ug BLOSSOM &rgb_ug SPRING &rgb_ug IVORY &rgb_ug PEACH &rgb_ug PLUM     &soft_off
-                &none       &none            &none           &rgb_ug RGB_EFF &rgb_ug RGB_TOG                 &none &none &none &none &none &none                &rgb_ug RGB_BRD &rgb_ug RGB_BRI &none        &none            &none
+                &trans       &trans  &trans  &trans  &trans                                                                               &trans  &trans  &trans   &trans    &trans
+                &trans       &trans  &trans  &trans  &trans   &trans                                                              &trans  &trans  &trans  &trans   &trans    &trans
+                &trans       &trans  &trans  &trans  &trans   &trans                                                              &trans  &trans  &trans  &trans   &trans    &trans
+                &lkp 7 TAB   &trans  &trans  &trans  &trans   &trans                                                              &trans  &trans  &trans  &trans   &trans    &lkp 7 SQT
+                &trans       &trans  &trans  &trans  &trans   &trans   &trans &lkp 7 END    &trans &trans &lkp 7 PG_UP &trans     &trans  &trans  &trans  &trans   &trans    &trans
+                &trans       &trans  &trans  &trans  &trans            &trans &trans        &trans &trans &trans       &trans             &trans  &trans  &trans   &trans    &trans
             >;
         };
-        num {
-            display-name = "Pad";
+        deafult_num {
+            display-name = "Default-Num";
             bindings = <
-                &none   &none   &none   &none    &none                                                                 &none          &none           &none           &none         &none
-                &trans  &trans  &trans  &trans  &trans  &trans                                                   &none &kp KP_NUM     &kp KP_DIVIDE   &kp KP_MULTIPLY &kp KP_EQUAL  &none
-                &trans  &trans  &trans  &trans  &trans  &trans                                                   &none &kp KP_N7      &kp KP_N8       &kp KP_N9       &kp KP_MINUS  &none
-                &trans  &trans  &trans  &trans  &trans  &trans                                                   &none &kp KP_N4      &kp KP_N5       &kp KP_N6       &kp KP_PLUS   &none
-                &trans  &trans  &trans  &trans  &trans  &trans     &trans &trans &trans &trans &trans &trans     &none &kp KP_N1      &kp KP_N2       &kp KP_N3       &kp KP_ENTER  &none
-                &trans  &trans  &trans  &trans  &trans             &trans &trans &none  &trans &trans &trans           &kp KP_COMMA   &kp KP_NUMBER_0 &kp KP_DOT      &kp KP_ENTER  &none
+                &none  &none  &none          &none           &none                                                                         &none          &none           &none           &none         &none
+                &none  &none  &none          &msc SCRL_UP    &trans          &none                                                   &none &kp KP_NUM     &kp KP_DIVIDE   &kp KP_MULTIPLY &kp KP_EQUAL  &none
+                &none  &none  &msc SCRL_LEFT &mmv MOVE_UP    &msc SCRL_RIGHT &none                                                   &none &kp KP_N7      &kp KP_N8       &kp KP_N9       &kp KP_MINUS  &none
+                &none  &none  &mmv MOVE_LEFT &mmv MOVE_DOWN  &mmv MOVE_RIGHT &none                                                   &none &kp KP_N4      &kp KP_N5       &kp KP_N6       &kp KP_PLUS   &none
+                &none  &none  &none          &msc SCRL_DOWN  &none           &none     &mkp 3 &none  &none  &none &none  &mkp 3      &none &kp KP_N1      &kp KP_N2       &kp KP_N3       &kp KP_ENTER  &none
+                &trans &trans &trans         &trans  &trans                            &mkp 1 &mkp 2 &none  &none &mkp 2 &mkp 1            &kp KP_COMMA   &kp KP_NUMBER_0 &kp KP_DOT      &kp KP_ENTER  &none
+            >;
+        };
+        default_mod {
+            display-name = "Default-Mod";
+            bindings = <
+                &none       &none            &none           &none           &none                                                                                &none          &none           &none          &none            &none
+                &bt BT_CLR  &bt_0            &bt_1           &bt_2           &bt_3           &bt_4                                                &bt BT_DISC 0   &bt BT_DISC 1  &bt BT_DISC 2 &bt BT_DISC 3  &bt BT_DISC 4    &bt BT_CLR
+                &bootloader &rgb_ug RGB_SPI  &rgb_ug RGB_SAI &rgb_ug RGB_HUI &rgb_ug RGB_BRI &rgb_ug RGB_TOG                                      &rgb_ug MAGENTA &rgb_ug TEAL   &rgb_ug LIME  &rgb_ug WINKLE &rgb_ug ROSE     &bootloader
+                &sys_reset  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD &rgb_ug RGB_HUD &rgb_ug RGB_BRD &rgb_ug RGB_EFF                                      &rgb_ug VIOLET  &rgb_ug AZURE  &rgb_ug AZURE &rgb_ug NAVY   &rgb_ug BURGUNDY &sys_reset
+                &soft_off   &none            &none           &none           &none           &none           &none &none &none &none &none &none  &rgb_ug BLOSSOM &rgb_ug SPRING &rgb_ug IVORY &rgb_ug PEACH  &rgb_ug PLUM     &soft_off
+                &none       &none            &none           &rgb_ug RGB_EFF &rgb_ug RGB_TOG                 &none &none &none &none &none &none                  &rgb_ug RGB_BRD &rgb_ug RGB_BRI &none       &none            &none
+            >;
+        };
+        deafult_med {
+            display-name = "Default-Med";
+            bindings = <
+                &none &none            &none          &none           &none                                                                                             &none          &none         &none          &none                &none
+                &none &none             &none         &none           &none                 &none                                                          &none        &none          &none         &none          &none                &none
+                &none &kp C_AL_JOURNAL  &kp C_AL_WORD &kp C_AL_EMAIL  &kp C_AL_TEXT_EDITOR  &kp C_AL_TASK_MANAGER                                          &kp C_RW     &kp C_PAUSE    &kp C_PLAY    &kp C_FF       &kp C_STOP_EJECT     &none
+                &none &kp C_AL_CALC     &kp C_AL_SHEET &kp C_AL_DOCS  &kp C_AL_FILES         &kp C_AL_TEXT_EDITOR                                          &kp C_PREV   &kp C_VOL_DN   &kp C_VOL_UP  &kp C_NEXT     &kp C_MUTE           &none
+                &none &kp C_AL_IMAGES   &kp C_AL_CONTROL_PANEL &kp C_AL_CAL &kp C_AL_MUSIC   &kp C_AL_WWW           &none &none &none &none &none &none    &kp C_REC    &kp C_SHUFFLE  &kp C_REPEAT  &kp C_CAPTIONS &kp C_DATA_ON_SCREEN &none
+                &none &kp C_AL_SELECT_TASK &kp C_AL_HELP  &kp C_AL_PREV_TASK &kp C_AL_NEXT_TASK                     &none &none &none &none &none &none                  &kp C_BRI_DN &kp C_BRI_UP   &kp C_SNAPSHOT &none                &none
+            >;
+        };
+        win_nav {
+            display-name = "Windows-Nav";
+            bindings = <
+                &none           &none                &none              &none              &none                                                                                  &none            &none           &none          &none    &none
+                &kp F10         &kp F1               &kp F2             &kp F3              &kp F4          &kp F5                                                    &kp F6       &kp F7          &kp F8          &kp F9         &kp F10  &kp F12
+                &macro_backtick &kp LA(F4)           &Win_Select_Word   &macro_kill_to_end  &kp LC(BSPC)    &kp LC(HOME)                                              &kp RC(LEFT) &kp RC(DOWN)    &kp RC(UP)      &kp RC(RIGHT)  &none    &macro_block
+                &macro_parens   &macro_kill_to_start &macro_select_line &macro_kill_line    &kp LC(DEL)     &kp LC(A)                                                 &kp LEFT     &kp DOWN        &kp UP          &kp RIGHT      &none    &macro_braces
+                &macro_quotes   &Win_Undo            &Win_Cut           &Win_Copy           &Win_Paste      &kp LC(END)   &trans &trans &trans &trans &trans &trans   &kp HOME     &kp PG_DN       &kp PG_UP       &kp END        &none    &macro_dquotes
+                &macro_angles   &none                &macro_fatarrow    &macro_join_pln      &macro_join_nln              &trans &trans &trans &trans &trans &trans   &macro_open_dln &macro_open_uln &macro_arrow   &none    &macro_brackets>;
+        };
+        mac_nav {
+            display-name = "Nav-mac";
+            bindings = <
+                &none           &none                &none              &none              &none                                                                                  &none            &none           &none          &none    &none
+                &kp F10         &kp F1               &kp F2             &kp F3              &kp F4          &kp F5                                                    &kp F6       &kp F7          &kp F8          &kp F9         &kp F10  &kp F12
+                &macro_backtick &kp LA(F4)           &Mac_Select_Word   &macro_kill_to_end  &kp LC(BSPC)    &kp LC(HOME)                                              &kp RC(LEFT) &kp RC(DOWN)    &kp RC(UP)      &kp RC(RIGHT)  &none    &macro_block
+                &macro_parens   &macro_kill_to_start &macro_select_line &macro_kill_line    &kp LC(DEL)     &kp LC(A)                                                 &kp LEFT     &kp DOWN        &kp UP          &kp RIGHT      &none    &macro_braces
+                &macro_quotes   &Mac_Undo            &Mac_Cut           &Mac_Copy           &Mac_Paste      &kp LC(END)   &trans &trans &trans &trans &trans &trans   &kp HOME     &kp PG_DN       &kp PG_UP       &kp END        &none    &macro_dquotes
+                &macro_angles   &none                &macro_fatarrow    &macro_join_pln     &macro_join_nln               &trans &trans &trans &trans &trans &trans   &macro_open_dln &macro_open_uln &macro_arrow   &none    &macro_brackets
             >;
         };
     };
