@@ -1,0 +1,34 @@
+combos {
+    compatible = "zmk,combos";
+    combo_num_left {
+        timeout-ms = <75>;
+        bindings = <&mo 3>;
+        key-positions = <53 70>;
+    };
+    combo_fun_left {
+        timeout-ms = <75>;
+        bindings = <&mo 2>;
+        key-positions = <52 69>;
+    };
+    combo_mag_left {
+        timeout-ms = <75>;
+        bindings = <&mo 1>;
+        key-positions = <54 71>;
+    };
+    combo_num_right {
+        timeout-ms = <75>;
+        bindings = <&mo 3>;
+        key-positions = <56 73>;
+    };
+    combo_fun_right {
+        timeout-ms = <75>;
+        bindings = <&mo 2>;
+        key-positions = <57 74>;
+    };
+    combo_mag_right {
+        timeout-ms = <75>;
+        bindings = <&mo 1>;
+        key-positions = <55 72>;
+    };
+};
+

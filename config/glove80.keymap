@@ -1,5 +1,6 @@
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 1400  // default: 600
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 40    // default: 10
+#define USER_CONFIG_DEFAULT_KEYMAP 1        // default: keymaps
 
 /*
  * Copyright (c) 2020 The ZMK Contributors
@@ -14,119 +15,9 @@
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
 #include <dt-bindings/zmk/rgb.h>
-
-#define STRINGIFY(x) #x
-#define EXPAND_AND_STRINGIFY(x) STRINGIFY(x)
-
-#define KEYS_NONE
-#define HYPER LS(LC(LA(LGUI)))
-
-#define KEYS_LEFT 0 1 2 3 4 \
-                  10 11 12 13 14 15 \
-                  22 23 24 25 26 27 \
-                  34 35 36 37 38 39 \
-                  46 47 48 49 50 51 \
-                  64 65 66 67 68
-
-#define KEYS_RIGHT 5 6 7 8 9 \
-                   16 17 18 19 20 21 \
-                   28 29 30 31 32 33 \
-                   40 41 42 43 44 45 \
-                   58 59 60 61 62 63 \
-                   75 76 77 78 79
-
-#define THUMBS_LEFT 69 52 70 53 71 54
-
-#define THUMBS_RIGHT 55 56 57 72 73 74
-
-#define THUMBS THUMBS_LEFT THUMBS_RIGHT
-
-#define MORPH(ID, LOWER, UPPER, MRPH) \
-    ID: mod_morph_##ID { \
-        compatible = "zmk,behavior-mod-morph"; \
-        #binding-cells = <0>; \
-        bindings = <&kp LOWER>, <&kp UPPER>; \
-        mods = <(MRPH)>; \
-    };
-
-#define SUPER(ID, FIRST, SECOND, TERM, QTAP, RPI, KEYS, FLAVE, ...) \
-    ID: mod_tap_##ID { \
-        compatible = "zmk,behavior-hold-tap"; \
-        quick_tap_ms = <QTAP>; \
-        tapping-term-ms = <TERM>; \
-        flavor = FLAVE; \
-        #binding-cells = <2>; \
-        bindings = <&FIRST>, <&SECOND>; \
-        require-prior-idle-ms = <RPI>; \
-        hold-trigger-key-positions = <KEYS>; \
-        hold-while-undecided-linger; \
-        __VA_ARGS__ \
-    };
-
-#define PROFILE(ID, INDEX, LAYER_ON, LAYER_OFF) \
-    ID: bt_profile_##ID { \
-        compatible = "zmk,behavior-macro"; \
-        #binding-cells = <0>; \
-        wait-ms = <0>; \
-        tap-ms  = <0>; \
-        bindings = <&bt BT_SEL INDEX>, <&tog_off LAYER_OFF>, <&tog_on LAYER_ON> ; \
-    };
-
-
-#define L_OS_WIN  1
-#define L_OS_MAC  2
-
-&sk {
-    quick-release;
-    release-after-ms = <500>;
-    /delete-property/ ignore-modifiers;
-};
-
-&soft_off {
-    hold-time-ms = <2000>;
-};
-
-&caps_word {
-    continue-list = <UNDERSCORE SEMI PIPE AMPS MINUS BACKSPACE DELETE LSHFT RSHFT>;
-};
-
-#define AZURE      RGB_COLOR_HSB(210, 100, 100)
-#define BLACK      RGB_COLOR_HSB(0,   0,   0)
-#define BLOSSOM    RGB_COLOR_HSB(330, 50,  100)
-#define BLUE       RGB_COLOR_HSB(240, 100, 100)
-#define BROWN      RGB_COLOR_HSB(30,  100, 50)
-#define BURGUNDY   RGB_COLOR_HSB(0,   100, 40)
-#define BUTTER     RGB_COLOR_HSB(60,  50,  100)
-#define CHARCOAL   RGB_COLOR_HSB(0,   0,   25)
-#define COCOA      RGB_COLOR_HSB(20,  100, 40)
-#define CYAN       RGB_COLOR_HSB(180, 100, 100)
-#define FOREST     RGB_COLOR_HSB(120, 100, 40)
-#define GRAY       RGB_COLOR_HSB(0,   0,   50)
-#define GREELOW    RGB_COLOR_HSB(90,  100, 100)
-#define GREEN      RGB_COLOR_HSB(120, 100, 100)
-#define IVORY      RGB_COLOR_HSB(60,  10,  100)
-#define LIME       RGB_COLOR_HSB(75,  100, 100)
-#define MAGENTA    RGB_COLOR_HSB(300, 100, 100)
-#define MINT       RGB_COLOR_HSB(150, 50,  100)
-#define NAVY       RGB_COLOR_HSB(240, 100, 40)
-#define OLIVE      RGB_COLOR_HSB(60,  100, 40)
-#define ORANGE     RGB_COLOR_HSB(30,  100, 100)
-#define PEACH      RGB_COLOR_HSB(20,  60,  100)
-#define WINKLE     RGB_COLOR_HSB(240, 50,  100)
-#define PINK       RGB_COLOR_HSB(0,   50,  100)
-#define PLUM       RGB_COLOR_HSB(300, 100, 40)
-#define PURPLE     RGB_COLOR_HSB(270, 100, 50)
-#define RED        RGB_COLOR_HSB(0,   100, 100)
-#define ROSE       RGB_COLOR_HSB(330, 100, 100)
-#define SEAFOAM    RGB_COLOR_HSB(160, 50,  100)
-#define SILVER     RGB_COLOR_HSB(0,   0,   75)
-#define SKY        RGB_COLOR_HSB(210, 50,  100)
-#define SPRING     RGB_COLOR_HSB(150, 100, 100)
-#define STEEL      RGB_COLOR_HSB(210, 10,  70)
-#define TEAL       RGB_COLOR_HSB(180, 100, 50)
-#define VIOLET     RGB_COLOR_HSB(270, 100, 100)
-#define WHITE      RGB_COLOR_HSB(0,   0,   100)
-#define YELLOW     RGB_COLOR_HSB(60,  100, 100)
+#include "plugin/overrides.dtsi"
+#include "colors.dtsi"
+#include "keys.dtsi"
 
 #define MAGIC(ID, FIRST, SECOND, TERM) \
     ID: mag_tap_##ID { \
@@ -140,82 +31,13 @@
 
 / {
     behaviors {
-        tog_on: toggle_layer_on_only {
-            compatible = "zmk,behavior-toggle-layer";
-            display-name = "Toggle Layer On";
-            #binding-cells = <1>;
-            toggle-mode = "on";
-        };
-
-        tog_off: toggle_layer_off_only {
-            compatible = "zmk,behavior-toggle-layer";
-            display-name = "Toggle Layer Off";
-            #binding-cells = <1>;
-            toggle-mode = "off";
-        };
-
-        SUPER(lcwm, mo, caps_word, 135, 0,   0, KEYS_NONE, "hold-preferred")
-        SUPER(lcwp, kp, caps_word, 135, 0,   0, KEYS_NONE, "hold-preferred")
-
-        SUPER(kpp, kp, kp, 135, 165, 25, KEYS_NONE,  "hold-preferred")
-        SUPER(lkp, mo, kp, 135, 165, 25, KEYS_NONE,  "tap-preferred")
-
-        SUPER(kpr, kp, kp, 130, 165, 25, KEYS_LEFT,  "balanced")
-        SUPER(kpl, kp, kp, 130, 165, 25, KEYS_RIGHT, "balanced")
-
-        MORPH(one,   EXCL,   N1, MOD_LSFT|MOD_RSFT)
-        MORPH(two,   AT,     N2, MOD_LSFT|MOD_RSFT)
-        MORPH(three, HASH,   N3, MOD_LSFT|MOD_RSFT)
-        MORPH(four,  DOLLAR, N4, MOD_LSFT|MOD_RSFT)
-        MORPH(five,  PRCNT,  N5, MOD_LSFT|MOD_RSFT)
-        MORPH(six,   CARET,  N6, MOD_LSFT|MOD_RSFT)
-        MORPH(seven, AMPS,   N7, MOD_LSFT|MOD_RSFT)
-        MORPH(eight, ASTRK,  N8, MOD_LSFT|MOD_RSFT)
-        MORPH(nine,  LPAR,   N9, MOD_LSFT|MOD_RSFT)
-        MORPH(zero,  RPAR,   N0, MOD_LSFT|MOD_RSFT)
-
-        PROFILE(pfl0, 0, L_OS_MAC, L_OS_WIN)
-        PROFILE(pfl1, 1, L_OS_MAC, L_OS_WIN)
-        PROFILE(pfl2, 2, L_OS_WIN, L_OS_MAC)
-        PROFILE(pfl3, 3, L_OS_WIN, L_OS_MAC)
-        PROFILE(pfl4, 4, L_OS_WIN, L_OS_MAC)
-
-        combos {
-            compatible = "zmk,combos";
-            combo_num_left {
-                timeout-ms = <75>;
-                bindings = <&mo 3>;
-                key-positions = <53 70>;
-            };
-            combo_fun_left {
-                timeout-ms = <75>;
-                bindings = <&mo 2>;
-                key-positions = <52 69>;
-            };
-            combo_mag_left {
-                timeout-ms = <75>;
-                bindings = <&mo 1>;
-                key-positions = <54 71>;
-            };
-            combo_num_right {
-                timeout-ms = <75>;
-                bindings = <&mo 3>;
-                key-positions = <56 73>;
-            };
-            combo_fun_right {
-                timeout-ms = <75>;
-                bindings = <&mo 2>;
-                key-positions = <57 74>;
-            };
-            combo_mag_right {
-                timeout-ms = <75>;
-                bindings = <&mo 1>;
-                key-positions = <55 72>;
-            };
-        };
-
+        #include "plugin/definitions.dtsi"
+        #include "plugin/declarations.dtsi"
+        #include "plugin/macros.dtsi"
+        #include "version.dtsi"
+        #include "combos.dtsi"
         #include "macros.dtsi"
-        #include "macros_additional.dtsi"
+
         MAGIC(mag, mo, rgb_ug_status_macro, 185)
     };
 
@@ -225,7 +47,7 @@
         default_layer {
             display-name = "Default-Base";
             bindings = <
-                &trans        &trans  &trans  &trans &trans                                                                                                               &trans    &trans     &trans      &trans    &trans
+                &none        &kp N1  &none  &none &none                                                                                                               &none    &none     &none      &kp N0    &none
                 &lkp  4 PSCRN &kp N1  &kp N2  &kp N3 &kp N4     &kp N5                                                                                            &kp N6  &kp N7    &kp N8     &kp N9      &kp N0    &lkp 4 BSPC
                 &lcwm 5 0     &kp Q   &kp W   &kp E  &kp R      &kp T                                                                                             &kp Y   &kp U     &kp I      &kp O       &kp P     &lkp 5 DEL
                 &lkp  6 TAB   &kp A   &kp S   &kp D  &kp F      &kp G                                                                                             &kp H   &kp J     &kp K      &kp L       &kp SEMI  &lkp 6 SQT
